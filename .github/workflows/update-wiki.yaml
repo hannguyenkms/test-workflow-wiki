@@ -29,7 +29,7 @@ jobs:
           NEW_ROW="| ${ENV} | ${BRANCH} | ${DATE} | ${STATUS} | [Run](${WORKFLOW_URL}) |"
           
           # Add the new row to the correct section
-          awk -v section="## ${SECTION}" -v row="$NEW_ROW" '
+          awk -v section="# ${SECTION}" -v row="$NEW_ROW" '
             $0==section {print; getline; print; getline; print; print row; next}
             {print}
           ' "$FILE" > tmp && mv tmp "$FILE"
