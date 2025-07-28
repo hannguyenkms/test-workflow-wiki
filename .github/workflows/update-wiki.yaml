@@ -26,7 +26,7 @@ jobs:
           WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           
           # Create new row for the table
-          NEW_ROW="| ${ENV} | ${BRANCH} | ${DATE} | ${STATUS} | [Run](${WORKFLOW_URL}) |"
+          NEW_ROW="| \`${ENV}\` | \`${BRANCH}\` | ${DATE} | ${STATUS} | [Run](${WORKFLOW_URL}) |"
           
           # Add the new row to the correct section
           awk -v section="# ${SECTION}" -v row="$NEW_ROW" '
