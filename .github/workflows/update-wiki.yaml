@@ -30,8 +30,8 @@ jobs:
           STATUS="✅ Success"
           WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           
-          # Override the deployment record if it already exists
-          sed -i "/^|\`${ENV}\`|/c\|\`${ENV}\`| \`${BRANCH}\` | ${DATE} | ${STATUS} | [Workflow URL](${WORKFLOW_URL}) |" "$FILE"
+          # Override the deployment record
+          sed -i "/^# ${SECTION}$/,/^# / s|^|\`${ENV}\`|.*$|\|\`${ENV}\`| \`${BRANCH}\` | ${DATE} | ${STATUS} | [Workflow URL](${WORKFLOW_URL}) ||" "$FILE"
 
       - name: Commit and Push
         env:
