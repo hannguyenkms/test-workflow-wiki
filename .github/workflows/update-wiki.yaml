@@ -31,7 +31,12 @@ jobs:
           WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           
           # Override the deployment record
-          sed -i "/^# ${SECTION}$/,/^# / s|^|\`${ENV}\`|.*$|\|\`${ENV}\`| \`${BRANCH}\` | ${DATE} | ${STATUS} | [Workflow URL](${WORKFLOW_URL}) ||" "$FILE"
+          awk -v section="# ${SECTION}" -v env="|`${ENV}`|" -v new="|`${ENV}`| \`${BRANCH}\` | ${DATE} | ${STATUS} | [Workflow URL](${WORKFLOW_URL}) |" '
+            $0==section {print; getline; print; getline; print; in_section=1; next}
+            in_section && $0 ~ /^# / {in_section=0}
+            in_section && $0 ~ env {$0=new}
+            {print}
+          ' "$FILE" > tmp && mv tmp "$FILE"
 
       - name: Commit and Push
         env:
