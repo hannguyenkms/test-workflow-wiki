@@ -18,7 +18,7 @@ jobs:
         run: |
           git clone "https://github.com/hannguyenkms/test-workflow-wiki.wiki.git" wiki
 
-      - name: Append Deployment Record to Correct Section
+      - name: Override Deployment Record to Correct Section
         run: |
           cd wiki
           FILE="Home.md"
