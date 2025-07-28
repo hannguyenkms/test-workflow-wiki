@@ -1,0 +1,46 @@
+name: Update Wiki After Merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Wiki
+        run: |
+          git clone "https://github.com/hannguyenkms/test-workflow-wiki.wiki.git" wiki
+
+      - name: Append Deployment Record to Correct Section
+        run: |
+          cd wiki
+          FILE="Home.md"
+          
+          SECTION="Home Component"
+          ENV="dev"  # hoặc lấy từ input
+          BRANCH="${GITHUB_REF_NAME}"
+          DATE="$(date '+%Y-%m-%d %H:%M:%S')"
+          STATUS="✅ Success"
+          WORKFLOW_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          
+          # Create new row for the table
+          NEW_ROW="| ${ENV} | ${BRANCH} | ${DATE} | ${STATUS} | [Run](${WORKFLOW_URL}) |"
+          
+          # Add the new row to the correct section
+          awk -v section="## ${SECTION}" -v row="$NEW_ROW" '
+            $0==section {print; getline; print; getline; print; print row; next}
+            {print}
+          ' "$FILE" > tmp && mv tmp "$FILE"
+
+      - name: Commit and Push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd wiki
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Append deployment record to ${SECTION}"
+          git push
