@@ -14,5 +14,5 @@ jobs:
   update-wiki:
     uses: ./.github/workflows/update-wiki.yaml
     with:
-      section: "Home Component"
-      env: "dev"
+      section: "infra"
+      env: "prod"
