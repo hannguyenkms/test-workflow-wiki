@@ -1,0 +1,27 @@
+# .github/workflows/cicd-3-stage.yml
+name: Deploy Dev
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: echo "Building app..."
+      - name: Test
+        run: echo "Running tests..."
+      - name: Package artifact
+        run: echo "Packaging artifact..."
+
+  deploy_dev:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - run: echo "Deploying to DEV..."
